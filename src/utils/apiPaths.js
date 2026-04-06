@@ -1,8 +1,5 @@
 // ✅ Safe base URL setup
-const BASE_URL =
-  import.meta.env.VITE_API_BASE_URL
-    ? `${import.meta.env.VITE_API_BASE_URL}`
-    : "http://localhost:9001/api";
+const BASE_URL = "https://ai-app-backend-x9lj.onrender.com/api";
 
 // 📡 API endpoints
 export const API_PATHS = {
