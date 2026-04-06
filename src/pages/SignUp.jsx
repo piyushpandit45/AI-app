@@ -33,6 +33,8 @@ const SignUp = () => {
       const response = await axiosInstance.post(API_PATHS.AUTH.SIGNUP, form);
       localStorage.setItem("token", response.data.data.token);
       localStorage.setItem("user", JSON.stringify(response.data.data));
+      // Dispatch event for Navbar to update user state
+      window.dispatchEvent(new Event('authChange'));
       toast.success("Account created successfully!");
       navigate("/dashboard");
     } catch (error) {

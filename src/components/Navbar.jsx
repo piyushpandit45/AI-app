@@ -11,15 +11,49 @@ const Navbar = () => {
   const location = useLocation()
 
   useEffect(() => {
-    const userStr = localStorage.getItem('user')
-    if (userStr) {
-      try {
-        setUser(JSON.parse(userStr))
-      } catch (error) {
-        console.error('Invalid user data in localStorage:', error)
-        localStorage.removeItem('user')
-        localStorage.removeItem('token')
+    // Load user from localStorage on mount
+    const loadUser = () => {
+      const userStr = localStorage.getItem('user')
+      if (userStr) {
+        try {
+          setUser(JSON.parse(userStr))
+        } catch (error) {
+          console.error('Invalid user data in localStorage:', error)
+          localStorage.removeItem('user')
+          localStorage.removeItem('token')
+        }
       }
+    }
+
+    loadUser()
+
+    // Listen for storage changes (when user logs in from another tab)
+    const handleStorageChange = (e) => {
+      if (e.key === 'user') {
+        if (e.newValue) {
+          try {
+            setUser(JSON.parse(e.newValue))
+          } catch (error) {
+            console.error('Invalid user data in storage event:', error)
+            setUser(null)
+          }
+        } else {
+          setUser(null)
+        }
+      }
+    }
+
+    // Listen for custom auth event (when user logs in on same page)
+    const handleAuthChange = () => {
+      loadUser()
+    }
+
+    window.addEventListener('storage', handleStorageChange)
+    window.addEventListener('authChange', handleAuthChange)
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+      window.removeEventListener('authChange', handleAuthChange)
     }
   }, [])
 

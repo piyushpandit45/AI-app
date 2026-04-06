@@ -29,6 +29,8 @@ const Login = () => {
       const res = await axiosInstance.post(API_PATHS.AUTH.LOGIN, form);
       localStorage.setItem("token", res.data.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.data));
+      // Dispatch event for Navbar to update user state
+      window.dispatchEvent(new Event('authChange'));
       toast.success("Login successful!");
       navigate("/dashboard");
     } catch (error) {
@@ -47,6 +49,8 @@ const Login = () => {
     };
     localStorage.setItem("user", JSON.stringify(guestUser));
     localStorage.removeItem("token");
+    // Dispatch event for Navbar to update user state
+    window.dispatchEvent(new Event('authChange'));
     toast.success("Welcome, Guest! You can now explore all features.");
     navigate("/dashboard");
   };
